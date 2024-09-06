@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -39,6 +40,23 @@ public class AuthController {
 			return ResponseEntity.ok(token);
 		}
 		return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+	}
+	
+	@PostMapping("/signout")
+	public ResponseEntity<Token> signout(@RequestHeader String token) {
+		authService.signout(token);
+		return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+	}
+	
+	@PostMapping("/check")
+	public ResponseEntity<?> check(@RequestHeader String token) {
+		Boolean isValid = authService.validate(token);
+		return (isValid) 
+				? 
+					ResponseEntity.ok().build() 
+				:
+					ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+		
 	}
 	
 }
